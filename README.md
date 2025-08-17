@@ -21,6 +21,7 @@ The CheckMK Downtime Service automatically sets maintenance downtimes in CheckMK
 - Linux system with systemd
 - CheckMK Agent installed
 - CheckMK Server with Web-Interface API
+- API-User and Key
 - curl installed
 - Root privileges for installation
 
@@ -64,12 +65,12 @@ sudo nano /etc/checkmk-downtime/config.conf
 
 Example configuration:
 ```bash
-CHECKMK_URL=&quot;https://your-checkmk-server.com/site&quot;
-CHECKMK_USER=&quot;downtime_user&quot;
-CHECKMK_SECRET=&quot;your_api_secret_here&quot;
+CHECKMK_URL="https://your-checkmk-server.com/site"
+CHECKMK_USER="downtime_user"
+CHECKMK_SECRET="your_api_secret_here"
 DOWNTIME_MINUTES=11
-HOSTNAME_FILE=&quot;/etc/check_mk/hostname.cfg&quot;
-LOG_LEVEL=&quot;INFO&quot;
+HOSTNAME_FILE="/etc/check_mk/hostname.cfg"
+LOG_LEVEL="INFO"
 ```
 
 # Usage
