@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# Default-Konfiguration (wird durch externe Konfiguration überschrieben)
+# Default-Konfiguration
 CHECKMK_URL=""
 CHECKMK_USER=""
 CHECKMK_SECRET=""

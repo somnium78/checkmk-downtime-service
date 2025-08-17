@@ -16,9 +16,9 @@ HOSTNAME_FILE="/etc/check_mk/hostname.cfg"
 LOG_LEVEL="INFO"  # Options: INFO, DEBUG, ERROR
 
 # Example configuration:
-# CHECKMK_URL="https://mon.example.com/Monitor"
-# CHECKMK_USER="ackdown"
-# CHECKMK_SECRET="GBMNFHLRYIQJEBAUQIWR"
+# CHECKMK_URL="https://monitor.example.com/CMK"
+# CHECKMK_USER="apidown"
+# CHECKMK_SECRET="YXZYXZYXZYXZYXZ"
 # DOWNTIME_MINUTES=11
 # HOSTNAME_FILE="/etc/check_mk/hostname.cfg"
 # LOG_LEVEL="INFO"

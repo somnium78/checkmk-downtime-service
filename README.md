@@ -58,6 +58,7 @@ sudo systemctl enable checkmk-downtime.service
 ### Configuration
 
 ⚠️ IMPORTANT: This repository contains NO sensitive data. You must configure your CheckMK credentials separately.
+
 Edit Configuration File
 ```bash
 sudo nano /etc/checkmk-downtime/config.conf
@@ -99,7 +100,6 @@ sudo ./scripts/test.sh
 ```
 
 # How It Works
-
     Trigger: Service starts automatically during shutdown/reboot
     Hostname: Reads hostname from /etc/check_mk/hostname.cfg
     API Call: Sends downtime request to CheckMK Web-Interface
@@ -115,7 +115,6 @@ sudo chown root:root /etc/checkmk-downtime/config.conf
 ```
 
 ### Best Practices
-
     Never commit API keys to repositories
     Use separate configuration files
     Use restricted CheckMK users for downtime operations only
@@ -173,19 +172,15 @@ sudo systemctl daemon-reload
 ```
 
 # Contributing
-
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 # License
-
 This project is licensed under the GNU General Public License v3.0 - see the LICENSE file for details.
 
 # Disclaimer
-
 This software is provided "as is" without warranty of any kind. Use at your own risk.
 
 # Support
-
 For issues and questions:
 - Create an issue on GitHub
 - Check CheckMK documentation: https://docs.checkmk.com/
