@@ -46,9 +46,9 @@ sudo cp src/checkmk-downtime.service /etc/systemd/system/
 sudo chmod +x /usr/local/bin/checkmk-downtime.sh
 
 # Create configuration
-sudo mkdir -p /etc/checkmk-downtime
-sudo cp src/checkmk-downtime.conf.example /etc/checkmk-downtime/config.conf
-sudo chmod 600 /etc/checkmk-downtime/config.conf
+sudo mkdir -p /etc/check_mk/
+sudo cp src/checkmk-downtime.conf.example /etc/check_mk/downtime.cfg
+sudo chmod 600 /etc/check_mk/downtime.cfg
 
 # Enable service
 sudo systemctl daemon-reload
