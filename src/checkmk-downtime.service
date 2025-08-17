@@ -1,0 +1,17 @@
+[Unit]
+Description=CheckMK Downtime Scheduler
+DefaultDependencies=false
+Before=shutdown.target reboot.target halt.target
+Conflicts=shutdown.target reboot.target halt.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/true
+ExecStop=/usr/local/bin/checkmk-downtime.sh
+TimeoutStopSec=30
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

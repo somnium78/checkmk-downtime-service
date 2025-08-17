@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+
+case "$1" in
+    configure)
+        # CheckMK-Verzeichnis erstellen falls nicht vorhanden
+        mkdir -p /etc/check_mk
+
+        # Script ausführbar machen
+        chmod +x /usr/local/bin/checkmk-downtime.sh
+
+        # Konfigurationsdatei-Berechtigung
+        if [[ -f /etc/check_mk/downtime.cfg ]]; then
+            chmod 600 /etc/check_mk/downtime.cfg
+        fi
+
+        # Systemd neu laden
+        systemctl daemon-reload
+
+        # Service aktivieren
+        systemctl enable checkmk-downtime.service
+
+        echo "CheckMK Downtime Service installed successfully."
+        echo "Please configure: /etc/check_mk/downtime.cfg"
+        echo "Test with: /usr/local/bin/checkmk-downtime.sh --test"
+        ;;
+esac
+
+exit 0

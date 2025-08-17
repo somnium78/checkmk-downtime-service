@@ -1,0 +1,13 @@
+Package: checkmk-downtime-service
+Version: 1.0
+Section: admin
+Priority: optional
+Architecture: all
+Depends: systemd, curl
+Maintainer: Marc Risse <risse@risse-it.de>
+Description: CheckMK downtime service for automatic maintenance windows
+ Automatically sets CheckMK downtimes during system shutdown/reboot
+ to prevent false alerts during planned maintenance.
+ .
+ This package includes systemd integration for reliable operation
+ and secure configuration management.
