@@ -61,7 +61,7 @@ sudo systemctl enable checkmk-downtime.service
 
 Edit Configuration File
 ```bash
-sudo nano /etc/checkmk-downtime/config.conf
+sudo nano /etc/check_mk/downtime.cfg
 ```
 
 Example configuration:
@@ -110,8 +110,8 @@ sudo ./scripts/test.sh
 ### Configuration File Security
 ```bash
 # Correct permissions for configuration file
-sudo chmod 600 /etc/checkmk-downtime/config.conf
-sudo chown root:root /etc/checkmk-downtime/config.conf
+sudo chmod 600 /etc/check_mk/downtime.cfg
+sudo chown root:root /etc/check_mk/downtime.cfg
 ```
 
 ### Best Practices
@@ -131,8 +131,8 @@ journalctl -u checkmk-downtime.service --no-pager
 
 ### Configuration missing
 ```bash
-sudo ls -la /etc/checkmk-downtime/config.conf
-sudo chmod 600 /etc/checkmk-downtime/config.conf
+sudo ls -la /etc/check_mk/downtime.cfg
+sudo chmod 600 /etc/check_mk/downtime.cfg
 ```
 
 ### API connection fails
@@ -165,7 +165,7 @@ sudo systemctl disable checkmk-downtime.service
 # Remove files
 sudo rm /usr/local/bin/checkmk-downtime.sh
 sudo rm /etc/systemd/system/checkmk-downtime.service
-sudo rm -rf /etc/checkmk-downtime/
+sudo rm -rf /etc/check_mk/downtime.cfg
 
 # Reload systemd
 sudo systemctl daemon-reload
