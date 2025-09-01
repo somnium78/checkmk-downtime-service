@@ -1,5 +1,7 @@
+%define version %(cat VERSION 2>/dev/null || echo "1.0.0")
+
 Name:           checkmk-downtime-service
-Version:        1.0.0
+Version:        %{version}
 Release:        1%{?dist}
 Summary:        CheckMK Downtime Service
 

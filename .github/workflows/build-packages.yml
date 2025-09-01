@@ -1,4 +1,7 @@
-name: Build Packages
+name: Build Multi-Platform Packages
+
+permissions:
+  contents: write
 
 on:
   push:
@@ -11,78 +14,102 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y debhelper devscripts build-essential
-
-      - name: Build Debian package
-        run: |
-          dpkg-buildpackage -us -uc -b
-          mv ../*.deb ./
-
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y dpkg-dev
+      - name: Build DEB package
+        run: chmod +x build-deb.sh && ./build-deb.sh
       - name: Upload DEB artifact
         uses: actions/upload-artifact@v4
         with:
-          name: debian-package
+          name: deb-package
           path: "*.deb"
 
-  build-rpm:
+  build-rpm-el8:
     runs-on: ubuntu-latest
-    container: centos:7
+    container: rockylinux:8
     steps:
       - uses: actions/checkout@v4
-
       - name: Install build dependencies
-        run: |
-          yum install -y rpm-build rpmdevtools systemd
-
+        run: dnf install -y rpm-build rpmdevtools systemd
       - name: Setup RPM build environment
         run: |
           rpmdev-setuptree
           cp rpm/checkmk-downtime-service.spec ~/rpmbuild/SPECS/
-
       - name: Create source tarball
         run: |
-          VERSION=$(grep Version debian/control | cut -d' ' -f2)
-          tar --exclude='.git' --exclude='debian' --exclude='rpm' \
+          VERSION=$(cat VERSION)
+          tar --exclude='.git' --exclude='debian' --exclude='rpm' --exclude='build' \
               -czf ~/rpmbuild/SOURCES/checkmk-downtime-service-${VERSION}.tar.gz .
-
       - name: Build RPM package
         run: |
           rpmbuild -ba ~/rpmbuild/SPECS/checkmk-downtime-service.spec
           cp ~/rpmbuild/RPMS/noarch/*.rpm ./
-
-      - name: Upload RPM artifact
+          for rpm in *.rpm; do
+            mv "$rpm" "${rpm%.rpm}-el8.rpm"
+          done
+      - name: Upload RPM EL8 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rpm-package
-          path: "*.rpm"
+          name: rpm-el8-package
+          path: "*-el8.rpm"
+
+  build-rpm-el9:
+    runs-on: ubuntu-latest
+    container: rockylinux:9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: dnf install -y rpm-build rpmdevtools systemd
+      - name: Setup RPM build environment
+        run: |
+          rpmdev-setuptree
+          cp rpm/checkmk-downtime-service.spec ~/rpmbuild/SPECS/
+      - name: Create source tarball
+        run: |
+          VERSION=$(cat VERSION)
+          tar --exclude='.git' --exclude='debian' --exclude='rpm' --exclude='build' \
+              -czf ~/rpmbuild/SOURCES/checkmk-downtime-service-${VERSION}.tar.gz .
+      - name: Build RPM package
+        run: |
+          rpmbuild -ba ~/rpmbuild/SPECS/checkmk-downtime-service.spec
+          cp ~/rpmbuild/RPMS/noarch/*.rpm ./
+          for rpm in *.rpm; do
+            mv "$rpm" "${rpm%.rpm}-el9.rpm"
+          done
+      - name: Upload RPM EL9 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpm-el9-package
+          path: "*-el9.rpm"
 
   create-release:
-    needs: [build-deb, build-rpm]
+    needs: [build-deb, build-rpm-el8, build-rpm-el9]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - uses: actions/checkout@v4
-
-      - name: Download DEB package
+      - name: Download packages
         uses: actions/download-artifact@v4
         with:
-          name: debian-package
-
-      - name: Download RPM package
-        uses: actions/download-artifact@v4
-        with:
-          name: rpm-package
-
+          path: ./packages/
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            *.deb
-            *.rpm
-          generate_release_notes: true
+            packages/**/*.deb
+            packages/**/*.rpm
+          name: "Release ${{ github.ref_name }}"
+          body: |
+            ## CheckMK Downtime Service
+
+            **Debian/Ubuntu:** checkmk-downtime-service_*_all.deb
+            **RHEL8/Rocky8:** checkmk-downtime-service-*-el8.rpm
+            **RHEL9/Rocky9:** checkmk-downtime-service-*-el9.rpm
+
+            **Installation:**
+            - Debian: `sudo dpkg -i checkmk-downtime-service_*.deb`
+            - RHEL: `sudo rpm -i checkmk-downtime-service-*.rpm`
+
+            See CHANGELOG.md for details.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
