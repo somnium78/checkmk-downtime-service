@@ -21,17 +21,17 @@ mkdir -p "$DEB_DIR"
 
 # Create directory structure
 mkdir -p "$DEB_DIR/DEBIAN"
-mkdir -p "$DEB_DIR/usr/bin"
-mkdir -p "$DEB_DIR/etc"
-mkdir -p "$DEB_DIR/lib/systemd/system"
+mkdir -p "$DEB_DIR/usr/local/bin"
+mkdir -p "$DEB_DIR/etc/check_mk"
+mkdir -p "$DEB_DIR/etc/systemd/system"
 
-# Copy files
-cp checkmk-downtime.py "$DEB_DIR/usr/bin/checkmk-downtime"
-cp checkmk-downtime.conf "$DEB_DIR/etc/"
-cp checkmk-downtime.service "$DEB_DIR/lib/systemd/system/"
+# Copy files from src directory
+cp src/checkmk-downtime.sh "$DEB_DIR/usr/local/bin/"
+cp src/checkmk-downtime.service "$DEB_DIR/etc/systemd/system/"
+cp src/checkmk-downtime.conf.example "$DEB_DIR/etc/check_mk/downtime.cfg"
 
 # Make script executable
-chmod +x "$DEB_DIR/usr/bin/checkmk-downtime"
+chmod +x "$DEB_DIR/usr/local/bin/checkmk-downtime.sh"
 
 # Create control file
 cat > "$DEB_DIR/DEBIAN/control" << CONTROL_EOF
@@ -40,7 +40,7 @@ Version: $VERSION
 Section: admin
 Priority: optional
 Architecture: $ARCH
-Depends: systemd, python3
+Depends: systemd, bash
 Maintainer: somnium78 <user@example.com>
 Description: CheckMK Downtime Service
  A systemd service for managing CheckMK downtimes.
@@ -66,9 +66,10 @@ fi
 # Reload systemd and enable service
 systemctl daemon-reload
 systemctl enable checkmk-downtime.service
-systemctl start checkmk-downtime.service
 
-echo "✅ CheckMK Downtime Service installed and started"
+echo "✅ CheckMK Downtime Service installed"
+echo "Configure /etc/check_mk/downtime.cfg and start with:"
+echo "systemctl start checkmk-downtime.service"
 POSTINST_EOF
 
 chmod +x "$DEB_DIR/DEBIAN/postinst"

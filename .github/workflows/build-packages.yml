@@ -35,11 +35,15 @@ jobs:
         run: |
           rpmdev-setuptree
           cp rpm/checkmk-downtime-service.spec ~/rpmbuild/SPECS/
-      - name: Create source tarball
+      - name: Create source tarball with correct structure
         run: |
           VERSION=$(cat VERSION)
-          tar --exclude='.git' --exclude='debian' --exclude='rpm' --exclude='build' \
-              -czf ~/rpmbuild/SOURCES/checkmk-downtime-service-${VERSION}.tar.gz .
+          mkdir -p /tmp/checkmk-downtime-service-${VERSION}
+          cp -r * /tmp/checkmk-downtime-service-${VERSION}/
+          cd /tmp
+          tar --exclude='.git' --exclude='build' \
+              -czf ~/rpmbuild/SOURCES/checkmk-downtime-service-${VERSION}.tar.gz \
+              checkmk-downtime-service-${VERSION}
       - name: Build RPM package
         run: |
           rpmbuild -ba ~/rpmbuild/SPECS/checkmk-downtime-service.spec
@@ -64,11 +68,15 @@ jobs:
         run: |
           rpmdev-setuptree
           cp rpm/checkmk-downtime-service.spec ~/rpmbuild/SPECS/
-      - name: Create source tarball
+      - name: Create source tarball with correct structure
         run: |
           VERSION=$(cat VERSION)
-          tar --exclude='.git' --exclude='debian' --exclude='rpm' --exclude='build' \
-              -czf ~/rpmbuild/SOURCES/checkmk-downtime-service-${VERSION}.tar.gz .
+          mkdir -p /tmp/checkmk-downtime-service-${VERSION}
+          cp -r * /tmp/checkmk-downtime-service-${VERSION}/
+          cd /tmp
+          tar --exclude='.git' --exclude='build' \
+              -czf ~/rpmbuild/SOURCES/checkmk-downtime-service-${VERSION}.tar.gz \
+              checkmk-downtime-service-${VERSION}
       - name: Build RPM package
         run: |
           rpmbuild -ba ~/rpmbuild/SPECS/checkmk-downtime-service.spec

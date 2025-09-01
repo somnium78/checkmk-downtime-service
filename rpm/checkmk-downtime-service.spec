@@ -11,7 +11,7 @@ Source0:        %{name}-%{version}.tar.gz
 
 BuildArch:      noarch
 Requires:       systemd
-Requires:       python3
+Requires:       bash
 BuildRequires:  systemd
 
 %description
@@ -26,11 +26,11 @@ A systemd service for managing CheckMK downtimes.
 %install
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_unitdir}
-mkdir -p %{buildroot}%{_sysconfdir}
+mkdir -p %{buildroot}%{_sysconfdir}/check_mk
 
-install -m 755 checkmk-downtime.py %{buildroot}%{_bindir}/checkmk-downtime
-install -m 644 checkmk-downtime.service %{buildroot}%{_unitdir}/
-install -m 644 checkmk-downtime.conf %{buildroot}%{_sysconfdir}/
+install -m 755 src/checkmk-downtime.sh %{buildroot}%{_bindir}/checkmk-downtime.sh
+install -m 644 src/checkmk-downtime.service %{buildroot}%{_unitdir}/
+install -m 644 src/checkmk-downtime.conf.example %{buildroot}%{_sysconfdir}/check_mk/downtime.cfg
 
 %post
 %systemd_post checkmk-downtime.service
@@ -52,12 +52,12 @@ fi
 %systemd_postun_with_restart checkmk-downtime.service
 
 %files
-%{_bindir}/checkmk-downtime
+%{_bindir}/checkmk-downtime.sh
 %{_unitdir}/checkmk-downtime.service
-%config(noreplace) %{_sysconfdir}/checkmk-downtime.conf
+%config(noreplace) %{_sysconfdir}/check_mk/downtime.cfg
 
 %changelog
-* Sun Sep 01 2025 somnium78 <user@example.com> - 1.0.0-1
+* Mon Sep 02 2024 somnium78 <user@example.com> - 1.0.0-1
 - Initial RPM package
 - Added error handling for old init.d script
 - Automated build process via GitHub Actions
