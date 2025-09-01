@@ -25,10 +25,10 @@ mkdir -p "$DEB_DIR/usr/local/bin"
 mkdir -p "$DEB_DIR/etc/check_mk"
 mkdir -p "$DEB_DIR/etc/systemd/system"
 
-# Copy files from src directory
+# Copy files from src directory (using correct filenames)
 cp src/checkmk-downtime.sh "$DEB_DIR/usr/local/bin/"
 cp src/checkmk-downtime.service "$DEB_DIR/etc/systemd/system/"
-cp src/checkmk-downtime.conf.example "$DEB_DIR/etc/check_mk/downtime.cfg"
+cp src/downtime.cfg.example "$DEB_DIR/etc/check_mk/downtime.cfg"
 
 # Make script executable
 chmod +x "$DEB_DIR/usr/local/bin/checkmk-downtime.sh"

@@ -30,7 +30,7 @@ mkdir -p %{buildroot}%{_sysconfdir}/check_mk
 
 install -m 755 src/checkmk-downtime.sh %{buildroot}%{_bindir}/checkmk-downtime.sh
 install -m 644 src/checkmk-downtime.service %{buildroot}%{_unitdir}/
-install -m 644 src/checkmk-downtime.conf.example %{buildroot}%{_sysconfdir}/check_mk/downtime.cfg
+install -m 644 src/downtime.cfg.example %{buildroot}%{_sysconfdir}/check_mk/downtime.cfg
 
 %post
 %systemd_post checkmk-downtime.service
