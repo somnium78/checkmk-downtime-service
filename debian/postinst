@@ -1,30 +1,25 @@
 #!/bin/bash
-
 set -e
 
 case "$1" in
     configure)
-        # CheckMK-Verzeichnis erstellen falls nicht vorhanden
-        mkdir -p /etc/check_mk
-
-        # Script ausführbar machen
-        chmod +x /usr/local/bin/checkmk-downtime.sh
-
-        # Konfigurationsdatei-Berechtigung
-        if [[ -f /etc/check_mk/downtime.cfg ]]; then
-            chmod 600 /etc/check_mk/downtime.cfg
+        # Stop and disable old service if it exists
+        if [ -f /etc/init.d/downtime ]; then
+            if systemctl is-active --quiet downtime 2>/dev/null; then
+                systemctl stop downtime || true
+            fi
+            if systemctl is-enabled --quiet downtime 2>/dev/null; then
+                systemctl disable downtime || true
+            fi
+            # Remove old init.d script
+            rm -f /etc/init.d/downtime
         fi
 
-        # Systemd neu laden
+        # Enable and start new service
         systemctl daemon-reload
-
-        # Service aktivieren
         systemctl enable checkmk-downtime.service
-
-        echo "CheckMK Downtime Service installed successfully."
-        echo "Please configure: /etc/check_mk/downtime.cfg"
-        echo "Test with: /usr/local/bin/checkmk-downtime.sh --test"
+        systemctl start checkmk-downtime.service
         ;;
 esac
 
-exit 0
+#DEBHELPER#
